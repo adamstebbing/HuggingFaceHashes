@@ -1,0 +1,6 @@
+.vscode/
+venv/
+output/
+config/
+hf_scanner.log
+token.txt
