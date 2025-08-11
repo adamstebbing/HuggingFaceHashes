@@ -532,17 +532,20 @@ class HuggingFaceScanner:
         """Create CSV file with scan parameters at the top"""
         with open(str(filename), 'w', newline='', encoding='utf-8') as f:
             # Write scan parameters as comments
-            f.write(f"# SCAN_DETAILS\n")
+            f.write(f"# SCAN_PARAMETERS\n")
             f.write(f"# scan_start: {datetime.now().isoformat()}\n")
             f.write(f"# download_threshold: {self.download_threshold}, ")
-            f.write(f"# max_file_size_gb: {self.max_file_size_bytes / (1024**3)}, ")
-            f.write(f"# rate_limit_delay: {self.rate_limit_delay}, ")
-            f.write(f"# max_workers: {self.max_workers}, ")
+            f.write(f"max_file_size_gb: {self.max_file_size_bytes / (1024**3)}, ")
+            f.write(f"rate_limit_delay: {self.rate_limit_delay}, ")
+            f.write(f"max_workers: {self.max_workers}\n")
             f.write(f"# target_extensions: {','.join(sorted(TARGET_EXTENSIONS))}\n")
             f.write(f"# authenticated: {'yes' if self.token else 'no'}\n")
-            if not is_error_file:
+            f.write(f"# END_PARAMETERS\n")
+            if is_error_file:
+                f.write(f"# output_format: error log\n")
+            else: 
                 f.write(f"# output_format: {'basic' if len(fieldnames) == 3 else 'extended'}\n")
-            
+                
             # Write CSV header
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
